@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp" class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>My AngularJS App</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="bower_components/ol3/ol.css" type="text/css">
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="cols-sm-12 col-md-offset-1 col-md-10 col-lg-offset-2 col-lg-8">
+
+
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <!-- Brand and toggle get grouped for better mobile display -->
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                                data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="#">Serverless App</a>
+                    </div>
+
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav">
+                            <li><a href="#!/map_view">Map</a></li>
+                            <li><a href="#!/about">About</a></li>
+                        </ul>
+                    </div><!-- /.navbar-collapse -->
+                </div><!-- /.container-fluid -->
+            </nav>
+
+
+            <div id="content" ng-view="" class="ng-scope">
+                <div id="map_wrapper" class="row ng-scope">
+                    <div class="col-sm-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">This is the partial for MAP</div>
+                            <div class="panel-body">
+                                <div map-dir id="map" class="map">
+                                    <div class="ol-viewport"
+                                         style="position: relative; overflow: hidden; width: 100%; height: 100%; touch-action: none;">
+                                        <canvas class="ol-unselectable" style="width: 100%; height: 100%;" width="1217"
+                                                height="400"></canvas>
+                                        <div class="ol-overlaycontainer"></div>
+                                        <div class="ol-overlaycontainer-stopevent">
+                                            <div class="ol-zoom ol-unselectable ol-control">
+                                                <button class="ol-zoom-in" type="button" title="Zoom in">+</button>
+                                                <button class="ol-zoom-out" type="button" title="Zoom out">−</button>
+                                            </div>
+                                            <div class="ol-rotate ol-unselectable ol-control ol-hidden">
+                                                <button class="ol-rotate-reset" type="button"
+                                                        title="Reset rotation"><span
+                                                        class="ol-compass" style="transform: rotate(0rad);">⇧</span>
+                                                </button>
+                                            </div>
+                                            <div class="ol-attribution ol-unselectable ol-control ol-collapsed">
+                                                <ul>
+                                                    <li style=""><a href="http://openlayers.org/"><img
+                                                            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAA3NCSVQICAjb4U/gAAAACXBIWXMAAAHGAAABxgEXwfpGAAAAGXRFWHRTb2Z0d2FyZQB3d3cuaW5rc2NhcGUub3Jnm+48GgAAAhNQTFRF////AP//AICAgP//AFVVQECA////K1VVSbbbYL/fJ05idsTYJFtbbcjbJllmZszWWMTOIFhoHlNiZszTa9DdUcHNHlNlV8XRIVdiasrUHlZjIVZjaMnVH1RlIFRkH1RkH1ZlasvYasvXVsPQH1VkacnVa8vWIVZjIFRjVMPQa8rXIVVkXsXRsNveIFVkIFZlIVVj3eDeh6GmbMvXH1ZkIFRka8rWbMvXIFVkIFVjIFVkbMvWH1VjbMvWIFVlbcvWIFVla8vVIFVkbMvWbMvVH1VkbMvWIFVlbcvWIFVkbcvVbMvWjNPbIFVkU8LPwMzNIFVkbczWIFVkbsvWbMvXIFVkRnB8bcvW2+TkW8XRIFVkIlZlJVloJlpoKlxrLl9tMmJwOWd0Omh1RXF8TneCT3iDUHiDU8LPVMLPVcLPVcPQVsPPVsPQV8PQWMTQWsTQW8TQXMXSXsXRX4SNX8bSYMfTYcfTYsfTY8jUZcfSZsnUaIqTacrVasrVa8jTa8rWbI2VbMvWbcvWdJObdcvUdszUd8vVeJaee87Yfc3WgJyjhqGnitDYjaarldPZnrK2oNbborW5o9bbo9fbpLa6q9ndrL3ArtndscDDutzfu8fJwN7gwt7gxc/QyuHhy+HizeHi0NfX0+Pj19zb1+Tj2uXk29/e3uLg3+Lh3+bl4uXj4ufl4+fl5Ofl5ufl5ujm5+jmySDnBAAAAFp0Uk5TAAECAgMEBAYHCA0NDg4UGRogIiMmKSssLzU7PkJJT1JTVFliY2hrdHZ3foSFhYeJjY2QkpugqbG1tre5w8zQ09XY3uXn6+zx8vT09vf4+Pj5+fr6/P39/f3+gz7SsAAAAVVJREFUOMtjYKA7EBDnwCPLrObS1BRiLoJLnte6CQy8FLHLCzs2QUG4FjZ5GbcmBDDjxJBXDWxCBrb8aM4zbkIDzpLYnAcE9VXlJSWlZRU13koIeW57mGx5XjoMZEUqwxWYQaQbSzLSkYGfKFSe0QMsX5WbjgY0YS4MBplemI4BdGBW+DQ11eZiymfqQuXZIjqwyadPNoSZ4L+0FVM6e+oGI6g8a9iKNT3o8kVzNkzRg5lgl7p4wyRUL9Yt2jAxVh6mQCogae6GmflI8p0r13VFWTHBQ0rWPW7ahgWVcPm+9cuLoyy4kCJDzCm6d8PSFoh0zvQNC5OjDJhQopPPJqph1doJBUD5tnkbZiUEqaCnB3bTqLTFG1bPn71kw4b+GFdpLElKIzRxxgYgWNYc5SCENVHKeUaltHdXx0dZ8uBI1hJ2UUDgq82CM2MwKeibqAvSO7MCABq0wXEPiqWEAAAAAElFTkSuQmCC"></a>
+                                                    </li>
+                                                    <li>© <a
+                                                            href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>
+                                                        contributors.
+                                                    </li>
+                                                </ul>
+                                                <button type="button" title="Attributions"><span>i</span></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="options" class="row ng-scope">
+                    <form class="ng-pristine ng-valid">
+                        <div class="col-sm-12 col-md-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">Source city</div>
+                                <div class="panel-body">
+                                    <fieldset id="source_city">
+                                        <!-- ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Berlin" type="radio" value="Berlin" name="source_city" ng-href="#here"
+                                                   ng-click="setSourceCity(p)" href="#here">
+                                            Berlin, Germany
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Hamburg" type="radio" value="Hamburg" name="source_city"
+                                                   ng-href="#here" ng-click="setSourceCity(p)" href="#here">
+                                            Hamburg, Germany
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Munich" type="radio" value="Munich" name="source_city" ng-href="#here"
+                                                   ng-click="setSourceCity(p)" href="#here">
+                                            Munich, Germany
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Cologne" type="radio" value="Cologne" name="source_city"
+                                                   ng-href="#here" ng-click="setSourceCity(p)" href="#here">
+                                            Cologne, Germany
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Frankfurt" type="radio" value="Frankfurt" name="source_city"
+                                                   ng-href="#here" ng-click="setSourceCity(p)" href="#here">
+                                            Frankfurt, Germany
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Dortmund" type="radio" value="Dortmund" name="source_city"
+                                                   ng-href="#here" ng-click="setSourceCity(p)" href="#here">
+                                            Dortmund, Germany
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Stuttgart" type="radio" value="Stuttgart" name="source_city"
+                                                   ng-href="#here" ng-click="setSourceCity(p)" href="#here">
+                                            Stuttgart, Germany
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Dusseldorf" type="radio" value="Dusseldorf" name="source_city"
+                                                   ng-href="#here" ng-click="setSourceCity(p)" href="#here">
+                                            Dusseldorf, Germany
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Bremen" type="radio" value="Bremen" name="source_city" ng-href="#here"
+                                                   ng-click="setSourceCity(p)" href="#here">
+                                            Bremen, Germany
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Hanover" type="radio" value="Hanover" name="source_city"
+                                                   ng-href="#here" ng-click="setSourceCity(p)" href="#here">
+                                            Hanover, Germany
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Nuremberg" type="radio" value="Nuremberg" name="source_city"
+                                                   ng-href="#here" ng-click="setSourceCity(p)" href="#here">
+                                            Nuremberg, Germany
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Leipzig" type="radio" value="Leipzig" name="source_city"
+                                                   ng-href="#here" ng-click="setSourceCity(p)" href="#here">
+                                            Leipzig, Germany
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Dresden" type="radio" value="Dresden" name="source_city"
+                                                   ng-href="#here" ng-click="setSourceCity(p)" href="#here">
+                                            Dresden, Germany
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="London" type="radio" value="London" name="source_city" ng-href="#here"
+                                                   ng-click="setSourceCity(p)" href="#here">
+                                            London, United Kingdom
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Birmingham" type="radio" value="Birmingham" name="source_city"
+                                                   ng-href="#here" ng-click="setSourceCity(p)" href="#here">
+                                            Birmingham, United Kingdom
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Leeds" type="radio" value="Leeds" name="source_city" ng-href="#here"
+                                                   ng-click="setSourceCity(p)" href="#here">
+                                            Leeds, United Kingdom
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Glasgow" type="radio" value="Glasgow" name="source_city"
+                                                   ng-href="#here" ng-click="setSourceCity(p)" href="#here">
+                                            Glasgow, United Kingdom
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Sheffield" type="radio" value="Sheffield" name="source_city"
+                                                   ng-href="#here" ng-click="setSourceCity(p)" href="#here">
+                                            Sheffield, United Kingdom
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Bradford" type="radio" value="Bradford" name="source_city"
+                                                   ng-href="#here" ng-click="setSourceCity(p)" href="#here">
+                                            Bradford, United Kingdom
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Manchester" type="radio" value="Manchester" name="source_city"
+                                                   ng-href="#here" ng-click="setSourceCity(p)" href="#here">
+                                            Manchester, United Kingdom
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Edinburgh" type="radio" value="Edinburgh" name="source_city"
+                                                   ng-href="#here" ng-click="setSourceCity(p)" href="#here">
+                                            Edinburgh, United Kingdom
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Liverpool" type="radio" value="Liverpool" name="source_city"
+                                                   ng-href="#here" ng-click="setSourceCity(p)" href="#here">
+                                            Liverpool, United Kingdom
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Bristol" type="radio" value="Bristol" name="source_city"
+                                                   ng-href="#here" ng-click="setSourceCity(p)" href="#here">
+                                            Bristol, United Kingdom
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Madrid" type="radio" value="Madrid" name="source_city" ng-href="#here"
+                                                   ng-click="setSourceCity(p)" href="#here">
+                                            Madrid, Spain
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Barcelona" type="radio" value="Barcelona" name="source_city"
+                                                   ng-href="#here" ng-click="setSourceCity(p)" href="#here">
+                                            Barcelona, Spain
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Valencia" type="radio" value="Valencia" name="source_city"
+                                                   ng-href="#here" ng-click="setSourceCity(p)" href="#here">
+                                            Valencia, Spain
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Seville" type="radio" value="Seville" name="source_city"
+                                                   ng-href="#here" ng-click="setSourceCity(p)" href="#here">
+                                            Seville, Spain
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Zaragoza" type="radio" value="Zaragoza" name="source_city"
+                                                   ng-href="#here" ng-click="setSourceCity(p)" href="#here">
+                                            Zaragoza, Spain
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Malaga" type="radio" value="Malaga" name="source_city" ng-href="#here"
+                                                   ng-click="setSourceCity(p)" href="#here">
+                                            Malaga, Spain
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Murcia" type="radio" value="Murcia" name="source_city" ng-href="#here"
+                                                   ng-click="setSourceCity(p)" href="#here">
+                                            Murcia, Spain
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Palma de Mallorca" type="radio" value="Palma de Mallorca"
+                                                   name="source_city" ng-href="#here" ng-click="setSourceCity(p)" href="#here">
+                                            Palma de Mallorca, Spain
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Rome" type="radio" value="Rome" name="source_city" ng-href="#here"
+                                                   ng-click="setSourceCity(p)" href="#here">
+                                            Rome, Italy
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Milan" type="radio" value="Milan" name="source_city" ng-href="#here"
+                                                   ng-click="setSourceCity(p)" href="#here">
+                                            Milan, Italy
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Naples" type="radio" value="Naples" name="source_city" ng-href="#here"
+                                                   ng-click="setSourceCity(p)" href="#here">
+                                            Naples, Italy
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Turin" type="radio" value="Turin" name="source_city" ng-href="#here"
+                                                   ng-click="setSourceCity(p)" href="#here">
+                                            Turin, Italy
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Palermo" type="radio" value="Palermo" name="source_city"
+                                                   ng-href="#here" ng-click="setSourceCity(p)" href="#here">
+                                            Palermo, Italy
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Paris" type="radio" value="Paris" name="source_city" ng-href="#here"
+                                                   ng-click="setSourceCity(p)" href="#here">
+                                            Paris, France
+                                        </div><!-- end ngRepeat: p in places -->
+
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-6">
+
+                            <div class="panel panel-default">
+                                <div class="panel-heading">Destination city</div>
+                                <div class="panel-body">
+                                    <fieldset id="destination_city">
+                                        <!-- ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Berlin" type="radio" value="Berlin" name="destination_city"
+                                                   ng-href="#here" ng-click="setDestinationCity(p)" href="#here">
+                                            Berlin, Germany
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Hamburg" type="radio" value="Hamburg" name="destination_city"
+                                                   ng-href="#here" ng-click="setDestinationCity(p)" href="#here">
+                                            Hamburg, Germany
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Munich" type="radio" value="Munich" name="destination_city"
+                                                   ng-href="#here" ng-click="setDestinationCity(p)" href="#here">
+                                            Munich, Germany
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Cologne" type="radio" value="Cologne" name="destination_city"
+                                                   ng-href="#here" ng-click="setDestinationCity(p)" href="#here">
+                                            Cologne, Germany
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Frankfurt" type="radio" value="Frankfurt" name="destination_city"
+                                                   ng-href="#here" ng-click="setDestinationCity(p)" href="#here">
+                                            Frankfurt, Germany
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Dortmund" type="radio" value="Dortmund" name="destination_city"
+                                                   ng-href="#here" ng-click="setDestinationCity(p)" href="#here">
+                                            Dortmund, Germany
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Stuttgart" type="radio" value="Stuttgart" name="destination_city"
+                                                   ng-href="#here" ng-click="setDestinationCity(p)" href="#here">
+                                            Stuttgart, Germany
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Dusseldorf" type="radio" value="Dusseldorf" name="destination_city"
+                                                   ng-href="#here" ng-click="setDestinationCity(p)" href="#here">
+                                            Dusseldorf, Germany
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Bremen" type="radio" value="Bremen" name="destination_city"
+                                                   ng-href="#here" ng-click="setDestinationCity(p)" href="#here">
+                                            Bremen, Germany
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Hanover" type="radio" value="Hanover" name="destination_city"
+                                                   ng-href="#here" ng-click="setDestinationCity(p)" href="#here">
+                                            Hanover, Germany
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Nuremberg" type="radio" value="Nuremberg" name="destination_city"
+                                                   ng-href="#here" ng-click="setDestinationCity(p)" href="#here">
+                                            Nuremberg, Germany
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Leipzig" type="radio" value="Leipzig" name="destination_city"
+                                                   ng-href="#here" ng-click="setDestinationCity(p)" href="#here">
+                                            Leipzig, Germany
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Dresden" type="radio" value="Dresden" name="destination_city"
+                                                   ng-href="#here" ng-click="setDestinationCity(p)" href="#here">
+                                            Dresden, Germany
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="London" type="radio" value="London" name="destination_city"
+                                                   ng-href="#here" ng-click="setDestinationCity(p)" href="#here">
+                                            London, United Kingdom
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Birmingham" type="radio" value="Birmingham" name="destination_city"
+                                                   ng-href="#here" ng-click="setDestinationCity(p)" href="#here">
+                                            Birmingham, United Kingdom
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Leeds" type="radio" value="Leeds" name="destination_city"
+                                                   ng-href="#here" ng-click="setDestinationCity(p)" href="#here">
+                                            Leeds, United Kingdom
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Glasgow" type="radio" value="Glasgow" name="destination_city"
+                                                   ng-href="#here" ng-click="setDestinationCity(p)" href="#here">
+                                            Glasgow, United Kingdom
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Sheffield" type="radio" value="Sheffield" name="destination_city"
+                                                   ng-href="#here" ng-click="setDestinationCity(p)" href="#here">
+                                            Sheffield, United Kingdom
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Bradford" type="radio" value="Bradford" name="destination_city"
+                                                   ng-href="#here" ng-click="setDestinationCity(p)" href="#here">
+                                            Bradford, United Kingdom
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Manchester" type="radio" value="Manchester" name="destination_city"
+                                                   ng-href="#here" ng-click="setDestinationCity(p)" href="#here">
+                                            Manchester, United Kingdom
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Edinburgh" type="radio" value="Edinburgh" name="destination_city"
+                                                   ng-href="#here" ng-click="setDestinationCity(p)" href="#here">
+                                            Edinburgh, United Kingdom
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Liverpool" type="radio" value="Liverpool" name="destination_city"
+                                                   ng-href="#here" ng-click="setDestinationCity(p)" href="#here">
+                                            Liverpool, United Kingdom
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Bristol" type="radio" value="Bristol" name="destination_city"
+                                                   ng-href="#here" ng-click="setDestinationCity(p)" href="#here">
+                                            Bristol, United Kingdom
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Madrid" type="radio" value="Madrid" name="destination_city"
+                                                   ng-href="#here" ng-click="setDestinationCity(p)" href="#here">
+                                            Madrid, Spain
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Barcelona" type="radio" value="Barcelona" name="destination_city"
+                                                   ng-href="#here" ng-click="setDestinationCity(p)" href="#here">
+                                            Barcelona, Spain
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Valencia" type="radio" value="Valencia" name="destination_city"
+                                                   ng-href="#here" ng-click="setDestinationCity(p)" href="#here">
+                                            Valencia, Spain
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Seville" type="radio" value="Seville" name="destination_city"
+                                                   ng-href="#here" ng-click="setDestinationCity(p)" href="#here">
+                                            Seville, Spain
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Zaragoza" type="radio" value="Zaragoza" name="destination_city"
+                                                   ng-href="#here" ng-click="setDestinationCity(p)" href="#here">
+                                            Zaragoza, Spain
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Malaga" type="radio" value="Malaga" name="destination_city"
+                                                   ng-href="#here" ng-click="setDestinationCity(p)" href="#here">
+                                            Malaga, Spain
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Murcia" type="radio" value="Murcia" name="destination_city"
+                                                   ng-href="#here" ng-click="setDestinationCity(p)" href="#here">
+                                            Murcia, Spain
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Palma de Mallorca" type="radio" value="Palma de Mallorca"
+                                                   name="destination_city" ng-href="#here" ng-click="setDestinationCity(p)"
+                                                   href="#here">
+                                            Palma de Mallorca, Spain
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Rome" type="radio" value="Rome" name="destination_city"
+                                                   ng-href="#here" ng-click="setDestinationCity(p)" href="#here">
+                                            Rome, Italy
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Milan" type="radio" value="Milan" name="destination_city"
+                                                   ng-href="#here" ng-click="setDestinationCity(p)" href="#here">
+                                            Milan, Italy
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Naples" type="radio" value="Naples" name="destination_city"
+                                                   ng-href="#here" ng-click="setDestinationCity(p)" href="#here">
+                                            Naples, Italy
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Turin" type="radio" value="Turin" name="destination_city"
+                                                   ng-href="#here" ng-click="setDestinationCity(p)" href="#here">
+                                            Turin, Italy
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Palermo" type="radio" value="Palermo" name="destination_city"
+                                                   ng-href="#here" ng-click="setDestinationCity(p)" href="#here">
+                                            Palermo, Italy
+                                        </div><!-- end ngRepeat: p in places -->
+                                        <div ng-repeat="p in places" class="ng-binding ng-scope">
+                                            <input title="Paris" type="radio" value="Paris" name="destination_city"
+                                                   ng-href="#here" ng-click="setDestinationCity(p)" href="#here">
+                                            Paris, France
+                                        </div><!-- end ngRepeat: p in places -->
+
+                                    </fieldset>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="col-sm-12">
+
+                            <div class="panel panel-default">
+                                <div class="panel-heading">Retrieve data!</div>
+                                <div class="panel-body">
+                                    <div class="btn-group btn-group-lg" role="group">
+                                        <button type="button" class="btn btn-default" ng-href="#here" ng-click="loadBackendData()">Retrieve</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="results" class="row ng-scope">
+                    <div class="col-xs-12 col-md-6">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">Flights</div>
+                            <div class="panel-body">
+                                <div id="sky_scanner">
+                                    <!-- ngRepeat: f in sky_scanner_flights -->
+                                    <div ng-repeat="f in sky_scanner_flights" class="ng-scope result">
+                                        <p>
+                                            <span class="ng-binding">2017-06-25</span>
+                                            <span class="minor ng-binding">from</span>
+                                            <span class="ng-binding">Berlin Tegel</span>
+                                            <span class="minor ng-binding">to</span>
+                                            <span class="ng-binding">London City</span>
+                                        </p>
+                                        <p class="minor">
+                                            <span class="minor ng-binding">for</span>
+                                            <span class="ng-binding">567</span>
+                                            <span class="minor ng-binding">USD</span>
+                                            <span class="minor ng-binding">with</span>
+                                            <span class="ng-binding">British Airways</span>
+                                        </p>
+                                    </div><!-- end ngRepeat: f in sky_scanner_flights -->
+                                    <div ng-repeat="f in sky_scanner_flights" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">2017-06-25</span>
+                                            <span class="description ng-binding">from Berlin Schoenefeld to London Luton</span>
+                                            <span class="name ng-binding">easyJet</span>
+                                            <span class="value ng-binding">202</span>
+                                            <span class="unit ng-binding">USD</span>
+                                        </p>
+                                    </div><!-- end ngRepeat: f in sky_scanner_flights -->
+                                    <div ng-repeat="f in sky_scanner_flights" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">2017-06-25</span>
+                                            <span class="description ng-binding">from Berlin Tegel to London Heathrow</span>
+                                            <span class="name ng-binding">eurowings</span>
+                                            <span class="value ng-binding">112</span>
+                                            <span class="unit ng-binding">USD</span>
+                                        </p>
+                                    </div><!-- end ngRepeat: f in sky_scanner_flights -->
+                                    <div ng-repeat="f in sky_scanner_flights" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">2017-06-25</span>
+                                            <span class="description ng-binding">from Berlin Schoenefeld to London Gatwick</span>
+                                            <span class="name ng-binding">easyJet</span>
+                                            <span class="value ng-binding">210</span>
+                                            <span class="unit ng-binding">USD</span>
+                                        </p>
+                                    </div><!-- end ngRepeat: f in sky_scanner_flights -->
+                                    <div ng-repeat="f in sky_scanner_flights" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">2017-06-26</span>
+                                            <span class="description ng-binding">from Berlin Tegel to London City</span>
+                                            <span class="name ng-binding">British Airways</span>
+                                            <span class="value ng-binding">232</span>
+                                            <span class="unit ng-binding">USD</span>
+                                        </p>
+                                    </div><!-- end ngRepeat: f in sky_scanner_flights -->
+                                    <div ng-repeat="f in sky_scanner_flights" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">2017-06-26</span>
+                                            <span class="description ng-binding">from Berlin Tegel to London Stansted</span>
+                                            <span class="name ng-binding">eurowings</span>
+                                            <span class="value ng-binding">115</span>
+                                            <span class="unit ng-binding">USD</span>
+                                        </p>
+                                    </div><!-- end ngRepeat: f in sky_scanner_flights -->
+                                    <div ng-repeat="f in sky_scanner_flights" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">2017-06-26</span>
+                                            <span class="description ng-binding">from Berlin Schoenefeld to London Gatwick</span>
+                                            <span class="name ng-binding">easyJet</span>
+                                            <span class="value ng-binding">120</span>
+                                            <span class="unit ng-binding">USD</span>
+                                        </p>
+                                    </div><!-- end ngRepeat: f in sky_scanner_flights -->
+                                    <div ng-repeat="f in sky_scanner_flights" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">2017-06-26</span>
+                                            <span class="description ng-binding">from Berlin Tegel to London Heathrow</span>
+                                            <span class="name ng-binding">British Airways</span>
+                                            <span class="value ng-binding">163</span>
+                                            <span class="unit ng-binding">USD</span>
+                                        </p>
+                                    </div><!-- end ngRepeat: f in sky_scanner_flights -->
+                                    <div ng-repeat="f in sky_scanner_flights" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">2017-06-26</span>
+                                            <span class="description ng-binding">from Berlin Tegel to London Heathrow</span>
+                                            <span class="name ng-binding">eurowings</span>
+                                            <span class="value ng-binding">112</span>
+                                            <span class="unit ng-binding">USD</span>
+                                        </p>
+                                    </div><!-- end ngRepeat: f in sky_scanner_flights -->
+                                    <div ng-repeat="f in sky_scanner_flights" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">2017-06-26</span>
+                                            <span class="description ng-binding">from Berlin Schoenefeld to London Luton</span>
+                                            <span class="name ng-binding">easyJet</span>
+                                            <span class="value ng-binding">132</span>
+                                            <span class="unit ng-binding">USD</span>
+                                        </p>
+                                    </div><!-- end ngRepeat: f in sky_scanner_flights -->
+                                    <div ng-repeat="f in sky_scanner_flights" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">2017-06-27</span>
+                                            <span class="description ng-binding">from Berlin Schoenefeld to London Gatwick</span>
+                                            <span class="name ng-binding">easyJet</span>
+                                            <span class="value ng-binding">100</span>
+                                            <span class="unit ng-binding">USD</span>
+                                        </p>
+                                    </div><!-- end ngRepeat: f in sky_scanner_flights -->
+                                    <div ng-repeat="f in sky_scanner_flights" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">2017-06-27</span>
+                                            <span class="description ng-binding">from Berlin Schoenefeld to London Luton</span>
+                                            <span class="name ng-binding">easyJet</span>
+                                            <span class="value ng-binding">100</span>
+                                            <span class="unit ng-binding">USD</span>
+                                        </p>
+                                    </div><!-- end ngRepeat: f in sky_scanner_flights -->
+                                    <div ng-repeat="f in sky_scanner_flights" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">2017-06-27</span>
+                                            <span class="description ng-binding">from Berlin Tegel to London Heathrow</span>
+                                            <span class="name ng-binding">British Airways</span>
+                                            <span class="value ng-binding">163</span>
+                                            <span class="unit ng-binding">USD</span>
+                                        </p>
+                                    </div><!-- end ngRepeat: f in sky_scanner_flights -->
+                                    <div ng-repeat="f in sky_scanner_flights" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">2017-06-27</span>
+                                            <span class="description ng-binding">from Berlin Tegel to London City</span>
+                                            <span class="name ng-binding">British Airways</span>
+                                            <span class="value ng-binding">159</span>
+                                            <span class="unit ng-binding">USD</span>
+                                        </p>
+                                    </div><!-- end ngRepeat: f in sky_scanner_flights -->
+                                    <div ng-repeat="f in sky_scanner_flights" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">2017-06-28</span>
+                                            <span class="description ng-binding">from Berlin Tegel to London City</span>
+                                            <span class="name ng-binding">British Airways</span>
+                                            <span class="value ng-binding">132</span>
+                                            <span class="unit ng-binding">USD</span>
+                                        </p>
+                                    </div><!-- end ngRepeat: f in sky_scanner_flights -->
+                                    <div ng-repeat="f in sky_scanner_flights" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">2017-06-28</span>
+                                            <span class="description ng-binding">from Berlin Schoenefeld to London Gatwick</span>
+                                            <span class="name ng-binding">easyJet</span>
+                                            <span class="value ng-binding">60</span>
+                                            <span class="unit ng-binding">USD</span>
+                                        </p>
+                                    </div><!-- end ngRepeat: f in sky_scanner_flights -->
+                                    <div ng-repeat="f in sky_scanner_flights" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">2017-06-28</span>
+                                            <span class="description ng-binding">from Berlin Tegel to London Heathrow</span>
+                                            <span class="name ng-binding">British Airways</span>
+                                            <span class="value ng-binding">163</span>
+                                            <span class="unit ng-binding">USD</span>
+                                        </p>
+                                    </div><!-- end ngRepeat: f in sky_scanner_flights -->
+                                    <div ng-repeat="f in sky_scanner_flights" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">2017-06-28</span>
+                                            <span class="description ng-binding">from Berlin Schoenefeld to London Luton</span>
+                                            <span class="name ng-binding">easyJet</span>
+                                            <span class="value ng-binding">66</span>
+                                            <span class="unit ng-binding">USD</span>
+                                        </p>
+                                    </div><!-- end ngRepeat: f in sky_scanner_flights -->
+                                    <div ng-repeat="f in sky_scanner_flights" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">2017-06-29</span>
+                                            <span class="description ng-binding">from Berlin Tegel to London City</span>
+                                            <span class="name ng-binding">British Airways</span>
+                                            <span class="value ng-binding">158</span>
+                                            <span class="unit ng-binding">USD</span>
+                                        </p>
+                                    </div><!-- end ngRepeat: f in sky_scanner_flights -->
+                                    <div ng-repeat="f in sky_scanner_flights" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">2017-06-29</span>
+                                            <span class="description ng-binding">from Berlin Schoenefeld to London Luton</span>
+                                            <span class="name ng-binding">easyJet</span>
+                                            <span class="value ng-binding">73</span>
+                                            <span class="unit ng-binding">USD</span>
+                                        </p>
+                                    </div><!-- end ngRepeat: f in sky_scanner_flights -->
+                                    <div ng-repeat="f in sky_scanner_flights" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">2017-06-29</span>
+                                            <span class="description ng-binding">from Berlin Schoenefeld to London Gatwick</span>
+                                            <span class="name ng-binding">easyJet</span>
+                                            <span class="value ng-binding">72</span>
+                                            <span class="unit ng-binding">USD</span>
+                                        </p>
+                                    </div><!-- end ngRepeat: f in sky_scanner_flights -->
+                                    <div ng-repeat="f in sky_scanner_flights" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">2017-06-29</span>
+                                            <span class="description ng-binding">from Berlin Tegel to London Heathrow</span>
+                                            <span class="name ng-binding">eurowings</span>
+                                            <span class="value ng-binding">224</span>
+                                            <span class="unit ng-binding">USD</span>
+                                        </p>
+                                    </div><!-- end ngRepeat: f in sky_scanner_flights -->
+                                    <div ng-repeat="f in sky_scanner_flights" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">2017-06-30</span>
+                                            <span class="description ng-binding">from Berlin Tegel to London City</span>
+                                            <span class="name ng-binding">British Airways</span>
+                                            <span class="value ng-binding">132</span>
+                                            <span class="unit ng-binding">USD</span>
+                                        </p>
+                                    </div><!-- end ngRepeat: f in sky_scanner_flights -->
+                                    <div ng-repeat="f in sky_scanner_flights" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">2017-06-30</span>
+                                            <span class="description ng-binding">from Berlin Schoenefeld to London Luton</span>
+                                            <span class="name ng-binding">easyJet</span>
+                                            <span class="value ng-binding">88</span>
+                                            <span class="unit ng-binding">USD</span>
+                                        </p>
+                                    </div><!-- end ngRepeat: f in sky_scanner_flights -->
+                                    <div ng-repeat="f in sky_scanner_flights" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">2017-06-30</span>
+                                            <span class="description ng-binding">from Berlin Schoenefeld to London Gatwick</span>
+                                            <span class="name ng-binding">easyJet</span>
+                                            <span class="value ng-binding">115</span>
+                                            <span class="unit ng-binding">USD</span>
+                                        </p>
+                                    </div><!-- end ngRepeat: f in sky_scanner_flights -->
+                                    <div ng-repeat="f in sky_scanner_flights" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">2017-06-30</span>
+                                            <span class="description ng-binding">from Berlin Tegel to London Heathrow</span>
+                                            <span class="name ng-binding">eurowings</span>
+                                            <span class="value ng-binding">135</span>
+                                            <span class="unit ng-binding">USD</span>
+                                        </p>
+                                    </div><!-- end ngRepeat: f in sky_scanner_flights -->
+                                    <div ng-repeat="f in sky_scanner_flights" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">2017-06-30</span>
+                                            <span class="description ng-binding">from Berlin Tegel to London Stansted</span>
+                                            <span class="name ng-binding">British Airways</span>
+                                            <span class="value ng-binding">77</span>
+                                            <span class="unit ng-binding">USD</span>
+                                        </p>
+                                    </div><!-- end ngRepeat: f in sky_scanner_flights -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">Weather</div>
+                            <div class="panel-body">
+                                <div id="weather">
+                                    <!-- ngRepeat: f in weather_forecast -->
+                                    <div ng-repeat="f in weather_forecast" class="result ng-scope">
+                                        <p>
+                                            <span class="ng-binding">06/23/2017</span>
+                                            <span class="minor ng-binding">11:00PM</span>
+                                            <span class="ng-binding">Clouds</span>
+                                            <span class="minor">,</span>
+                                            <span class="ng-binding">18°</span>
+                                            <span class="minor">Celsius</span>
+                                        </p>
+                                    </div><!-- end ngRepeat: f in weather_forecast -->
+                                    <div ng-repeat="f in weather_forecast" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">06/24/2017 2:00AM</span>
+                                            <span class="name ng-binding">Clouds</span>,
+                                            <span class="value ng-binding">18</span>
+                                            <span class="unit">° Celsius</span></p>
+                                    </div><!-- end ngRepeat: f in weather_forecast -->
+                                    <div ng-repeat="f in weather_forecast" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">06/24/2017 5:00AM</span>
+                                            <span class="name ng-binding">Rain</span>,
+                                            <span class="value ng-binding">17</span>
+                                            <span class="unit">° Celsius</span></p>
+                                    </div><!-- end ngRepeat: f in weather_forecast -->
+                                    <div ng-repeat="f in weather_forecast" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">06/24/2017 8:00AM</span>
+                                            <span class="name ng-binding">Rain</span>,
+                                            <span class="value ng-binding">17</span>
+                                            <span class="unit">° Celsius</span></p>
+                                    </div><!-- end ngRepeat: f in weather_forecast -->
+                                    <div ng-repeat="f in weather_forecast" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">06/24/2017 11:00AM</span>
+                                            <span class="name ng-binding">Rain</span>,
+                                            <span class="value ng-binding">19</span>
+                                            <span class="unit">° Celsius</span></p>
+                                    </div><!-- end ngRepeat: f in weather_forecast -->
+                                    <div ng-repeat="f in weather_forecast" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">06/24/2017 2:00PM</span>
+                                            <span class="name ng-binding">Rain</span>,
+                                            <span class="value ng-binding">21</span>
+                                            <span class="unit">° Celsius</span></p>
+                                    </div><!-- end ngRepeat: f in weather_forecast -->
+                                    <div ng-repeat="f in weather_forecast" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">06/24/2017 5:00PM</span>
+                                            <span class="name ng-binding">Rain</span>,
+                                            <span class="value ng-binding">21</span>
+                                            <span class="unit">° Celsius</span></p>
+                                    </div><!-- end ngRepeat: f in weather_forecast -->
+                                    <div ng-repeat="f in weather_forecast" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">06/24/2017 8:00PM</span>
+                                            <span class="name ng-binding">Rain</span>,
+                                            <span class="value ng-binding">20</span>
+                                            <span class="unit">° Celsius</span></p>
+                                    </div><!-- end ngRepeat: f in weather_forecast -->
+                                    <div ng-repeat="f in weather_forecast" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">06/24/2017 11:00PM</span>
+                                            <span class="name ng-binding">Rain</span>,
+                                            <span class="value ng-binding">19</span>
+                                            <span class="unit">° Celsius</span></p>
+                                    </div><!-- end ngRepeat: f in weather_forecast -->
+                                    <div ng-repeat="f in weather_forecast" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">06/25/2017 2:00AM</span>
+                                            <span class="name ng-binding">Rain</span>,
+                                            <span class="value ng-binding">17</span>
+                                            <span class="unit">° Celsius</span></p>
+                                    </div><!-- end ngRepeat: f in weather_forecast -->
+                                    <div ng-repeat="f in weather_forecast" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">06/25/2017 5:00AM</span>
+                                            <span class="name ng-binding">Clear</span>,
+                                            <span class="value ng-binding">15</span>
+                                            <span class="unit">° Celsius</span></p>
+                                    </div><!-- end ngRepeat: f in weather_forecast -->
+                                    <div ng-repeat="f in weather_forecast" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">06/25/2017 8:00AM</span>
+                                            <span class="name ng-binding">Clear</span>,
+                                            <span class="value ng-binding">15</span>
+                                            <span class="unit">° Celsius</span></p>
+                                    </div><!-- end ngRepeat: f in weather_forecast -->
+                                    <div ng-repeat="f in weather_forecast" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">06/25/2017 11:00AM</span>
+                                            <span class="name ng-binding">Clear</span>,
+                                            <span class="value ng-binding">16</span>
+                                            <span class="unit">° Celsius</span></p>
+                                    </div><!-- end ngRepeat: f in weather_forecast -->
+                                    <div ng-repeat="f in weather_forecast" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">06/25/2017 2:00PM</span>
+                                            <span class="name ng-binding">Clear</span>,
+                                            <span class="value ng-binding">19</span>
+                                            <span class="unit">° Celsius</span></p>
+                                    </div><!-- end ngRepeat: f in weather_forecast -->
+                                    <div ng-repeat="f in weather_forecast" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">06/25/2017 5:00PM</span>
+                                            <span class="name ng-binding">Clear</span>,
+                                            <span class="value ng-binding">20</span>
+                                            <span class="unit">° Celsius</span></p>
+                                    </div><!-- end ngRepeat: f in weather_forecast -->
+                                    <div ng-repeat="f in weather_forecast" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">06/25/2017 8:00PM</span>
+                                            <span class="name ng-binding">Clear</span>,
+                                            <span class="value ng-binding">19</span>
+                                            <span class="unit">° Celsius</span></p>
+                                    </div><!-- end ngRepeat: f in weather_forecast -->
+                                    <div ng-repeat="f in weather_forecast" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">06/25/2017 11:00PM</span>
+                                            <span class="name ng-binding">Rain</span>,
+                                            <span class="value ng-binding">16</span>
+                                            <span class="unit">° Celsius</span></p>
+                                    </div><!-- end ngRepeat: f in weather_forecast -->
+                                    <div ng-repeat="f in weather_forecast" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">06/26/2017 2:00AM</span>
+                                            <span class="name ng-binding">Clouds</span>,
+                                            <span class="value ng-binding">13</span>
+                                            <span class="unit">° Celsius</span></p>
+                                    </div><!-- end ngRepeat: f in weather_forecast -->
+                                    <div ng-repeat="f in weather_forecast" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">06/26/2017 5:00AM</span>
+                                            <span class="name ng-binding">Clouds</span>,
+                                            <span class="value ng-binding">12</span>
+                                            <span class="unit">° Celsius</span></p>
+                                    </div><!-- end ngRepeat: f in weather_forecast -->
+                                    <div ng-repeat="f in weather_forecast" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">06/26/2017 8:00AM</span>
+                                            <span class="name ng-binding">Clouds</span>,
+                                            <span class="value ng-binding">14</span>
+                                            <span class="unit">° Celsius</span></p>
+                                    </div><!-- end ngRepeat: f in weather_forecast -->
+                                    <div ng-repeat="f in weather_forecast" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">06/26/2017 11:00AM</span>
+                                            <span class="name ng-binding">Clouds</span>,
+                                            <span class="value ng-binding">18</span>
+                                            <span class="unit">° Celsius</span></p>
+                                    </div><!-- end ngRepeat: f in weather_forecast -->
+                                    <div ng-repeat="f in weather_forecast" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">06/26/2017 2:00PM</span>
+                                            <span class="name ng-binding">Rain</span>,
+                                            <span class="value ng-binding">22</span>
+                                            <span class="unit">° Celsius</span></p>
+                                    </div><!-- end ngRepeat: f in weather_forecast -->
+                                    <div ng-repeat="f in weather_forecast" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">06/26/2017 5:00PM</span>
+                                            <span class="name ng-binding">Clouds</span>,
+                                            <span class="value ng-binding">23</span>
+                                            <span class="unit">° Celsius</span></p>
+                                    </div><!-- end ngRepeat: f in weather_forecast -->
+                                    <div ng-repeat="f in weather_forecast" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">06/26/2017 8:00PM</span>
+                                            <span class="name ng-binding">Clouds</span>,
+                                            <span class="value ng-binding">23</span>
+                                            <span class="unit">° Celsius</span></p>
+                                    </div><!-- end ngRepeat: f in weather_forecast -->
+                                    <div ng-repeat="f in weather_forecast" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">06/26/2017 11:00PM</span>
+                                            <span class="name ng-binding">Clouds</span>,
+                                            <span class="value ng-binding">20</span>
+                                            <span class="unit">° Celsius</span></p>
+                                    </div><!-- end ngRepeat: f in weather_forecast -->
+                                    <div ng-repeat="f in weather_forecast" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">06/27/2017 2:00AM</span>
+                                            <span class="name ng-binding">Clouds</span>,
+                                            <span class="value ng-binding">18</span>
+                                            <span class="unit">° Celsius</span></p>
+                                    </div><!-- end ngRepeat: f in weather_forecast -->
+                                    <div ng-repeat="f in weather_forecast" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">06/27/2017 5:00AM</span>
+                                            <span class="name ng-binding">Rain</span>,
+                                            <span class="value ng-binding">17</span>
+                                            <span class="unit">° Celsius</span></p>
+                                    </div><!-- end ngRepeat: f in weather_forecast -->
+                                    <div ng-repeat="f in weather_forecast" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">06/27/2017 8:00AM</span>
+                                            <span class="name ng-binding">Rain</span>,
+                                            <span class="value ng-binding">17</span>
+                                            <span class="unit">° Celsius</span></p>
+                                    </div><!-- end ngRepeat: f in weather_forecast -->
+                                    <div ng-repeat="f in weather_forecast" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">06/27/2017 11:00AM</span>
+                                            <span class="name ng-binding">Rain</span>,
+                                            <span class="value ng-binding">17</span>
+                                            <span class="unit">° Celsius</span></p>
+                                    </div><!-- end ngRepeat: f in weather_forecast -->
+                                    <div ng-repeat="f in weather_forecast" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">06/27/2017 2:00PM</span>
+                                            <span class="name ng-binding">Rain</span>,
+                                            <span class="value ng-binding">19</span>
+                                            <span class="unit">° Celsius</span></p>
+                                    </div><!-- end ngRepeat: f in weather_forecast -->
+                                    <div ng-repeat="f in weather_forecast" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">06/27/2017 5:00PM</span>
+                                            <span class="name ng-binding">Rain</span>,
+                                            <span class="value ng-binding">20</span>
+                                            <span class="unit">° Celsius</span></p>
+                                    </div><!-- end ngRepeat: f in weather_forecast -->
+                                    <div ng-repeat="f in weather_forecast" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">06/27/2017 8:00PM</span>
+                                            <span class="name ng-binding">Rain</span>,
+                                            <span class="value ng-binding">21</span>
+                                            <span class="unit">° Celsius</span></p>
+                                    </div><!-- end ngRepeat: f in weather_forecast -->
+                                    <div ng-repeat="f in weather_forecast" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">06/27/2017 11:00PM</span>
+                                            <span class="name ng-binding">Clouds</span>,
+                                            <span class="value ng-binding">17</span>
+                                            <span class="unit">° Celsius</span></p>
+                                    </div><!-- end ngRepeat: f in weather_forecast -->
+                                    <div ng-repeat="f in weather_forecast" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">06/28/2017 2:00AM</span>
+                                            <span class="name ng-binding">Clouds</span>,
+                                            <span class="value ng-binding">15</span>
+                                            <span class="unit">° Celsius</span></p>
+                                    </div><!-- end ngRepeat: f in weather_forecast -->
+                                    <div ng-repeat="f in weather_forecast" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">06/28/2017 5:00AM</span>
+                                            <span class="name ng-binding">Rain</span>,
+                                            <span class="value ng-binding">14</span>
+                                            <span class="unit">° Celsius</span></p>
+                                    </div><!-- end ngRepeat: f in weather_forecast -->
+                                    <div ng-repeat="f in weather_forecast" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">06/28/2017 8:00AM</span>
+                                            <span class="name ng-binding">Rain</span>,
+                                            <span class="value ng-binding">14</span>
+                                            <span class="unit">° Celsius</span></p>
+                                    </div><!-- end ngRepeat: f in weather_forecast -->
+                                    <div ng-repeat="f in weather_forecast" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">06/28/2017 11:00AM</span>
+                                            <span class="name ng-binding">Rain</span>,
+                                            <span class="value ng-binding">15</span>
+                                            <span class="unit">° Celsius</span></p>
+                                    </div><!-- end ngRepeat: f in weather_forecast -->
+                                    <div ng-repeat="f in weather_forecast" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">06/28/2017 2:00PM</span>
+                                            <span class="name ng-binding">Rain</span>,
+                                            <span class="value ng-binding">16</span>
+                                            <span class="unit">° Celsius</span></p>
+                                    </div><!-- end ngRepeat: f in weather_forecast -->
+                                    <div ng-repeat="f in weather_forecast" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">06/28/2017 5:00PM</span>
+                                            <span class="name ng-binding">Rain</span>,
+                                            <span class="value ng-binding">17</span>
+                                            <span class="unit">° Celsius</span></p>
+                                    </div><!-- end ngRepeat: f in weather_forecast -->
+                                    <div ng-repeat="f in weather_forecast" class="ng-scope">
+                                        <p>
+                                            <span class="date ng-binding">06/28/2017 8:00PM</span>
+                                            <span class="name ng-binding">Rain</span>,
+                                            <span class="value ng-binding">15</span>
+                                            <span class="unit">° Celsius</span></p>
+                                    </div><!-- end ngRepeat: f in weather_forecast -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6">
+
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading">Local transport</div>
+                            <div class="panel-body">
+                                <div id="uber">
+                                    <!-- ngRepeat: p in uber_pricing -->
+                                    <div ng-repeat="p in uber_pricing" class="result ng-scope">
+                                        <p>
+                                            <span class="ng-binding">7 - 7</span>
+                                            <span class="minor ng-binding">GBP</span>
+                                            <span class="minor ng-binding">for</span>
+                                            <span class="ng-binding">1.93</span>
+                                            <span class="minor">km</span>
+                                            <span class="minor ng-binding">with</span>
+                                            <span class="ng-binding">uberPOOL</span>,
+                                        </p>
+                                    </div><!-- end ngRepeat: p in uber_pricing -->
+                                    <div ng-repeat="p in uber_pricing" class="ng-scope">
+                                        <p>
+                                            <span class="name ng-binding">uberX</span>,
+                                            <span class="value ng-binding">7 - 8</span>
+                                            <span class="unit ng-binding">GBP</span>
+                                            <span class="value ng-binding">for 1.93 </span>
+                                            <span class="unit">km</span>
+                                        </p>
+                                    </div><!-- end ngRepeat: p in uber_pricing -->
+                                    <div ng-repeat="p in uber_pricing" class="ng-scope">
+                                        <p>
+                                            <span class="name ng-binding">uberXL</span>,
+                                            <span class="value ng-binding">9 - 11</span>
+                                            <span class="unit ng-binding">GBP</span>
+                                            <span class="value ng-binding">for 1.93 </span>
+                                            <span class="unit">km</span>
+                                        </p>
+                                    </div><!-- end ngRepeat: p in uber_pricing -->
+                                    <div ng-repeat="p in uber_pricing" class="ng-scope">
+                                        <p>
+                                            <span class="name ng-binding">UberEXEC</span>,
+                                            <span class="value ng-binding">11 - 14</span>
+                                            <span class="unit ng-binding">GBP</span>
+                                            <span class="value ng-binding">for 1.93 </span>
+                                            <span class="unit">km</span>
+                                        </p>
+                                    </div><!-- end ngRepeat: p in uber_pricing -->
+                                    <div ng-repeat="p in uber_pricing" class="ng-scope">
+                                        <p>
+                                            <span class="name ng-binding">UberLUX</span>,
+                                            <span class="value ng-binding">16 - 21</span>
+                                            <span class="unit ng-binding">GBP</span>
+                                            <span class="value ng-binding">for 1.93 </span>
+                                            <span class="unit">km</span>
+                                        </p>
+                                    </div><!-- end ngRepeat: p in uber_pricing -->
+                                    <div ng-repeat="p in uber_pricing" class="ng-scope">
+                                        <p>
+                                            <span class="name ng-binding">uberASSIST</span>,
+                                            <span class="value ng-binding">7 - 8</span>
+                                            <span class="unit ng-binding">GBP</span>
+                                            <span class="value ng-binding">for 1.93 </span>
+                                            <span class="unit">km</span>
+                                        </p>
+                                    </div><!-- end ngRepeat: p in uber_pricing -->
+                                    <div ng-repeat="p in uber_pricing" class="ng-scope">
+                                        <p>
+                                            <span class="name ng-binding">uberWAV</span>,
+                                            <span class="value ng-binding">7 - 8</span>
+                                            <span class="unit ng-binding">GBP</span>
+                                            <span class="value ng-binding">for 1.93 </span>
+                                            <span class="unit">km</span>
+                                        </p>
+                                    </div><!-- end ngRepeat: p in uber_pricing -->
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                    <div class="col-xs-12 col-md-6">
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading">Latest photos</div>
+                            <div class="panel-body">
+                                <div id="instagram">
+                                    <!-- ngRepeat: m in instagram_media -->
+                                    <div ng-repeat="m in instagram_media" class="ng-scope">
+                                        <img ng-src="https://scontent.cdninstagram.com/t51.2885-15/s320x320/e35/c0.135.1080.1080/19379505_1926814864256576_4814198154545070080_n.jpg"
+                                             src="https://scontent.cdninstagram.com/t51.2885-15/s320x320/e35/c0.135.1080.1080/19379505_1926814864256576_4814198154545070080_n.jpg">
+                                        <p>
+                                            <span class="value ng-binding">0</span>
+                                            <span class="unit">likes</span>
+                                            <span class="description ng-binding">["telephonebooth","red","london"]</span>
+                                        </p>
+                                    </div><!-- end ngRepeat: m in instagram_media -->
+                                    <div ng-repeat="m in instagram_media" class="ng-scope">
+                                        <img ng-src="https://scontent.cdninstagram.com/t51.2885-15/s320x320/e35/c0.128.1080.1080/19424913_1381506965261839_1451497039635415040_n.jpg"
+                                             src="https://scontent.cdninstagram.com/t51.2885-15/s320x320/e35/c0.128.1080.1080/19424913_1381506965261839_1451497039635415040_n.jpg">
+                                        <p>
+                                            <span class="value ng-binding">7</span>
+                                            <span class="unit">likes</span>
+                                            <span class="description ng-binding">["camdenmarket","london","always"]</span>
+                                        </p>
+                                    </div><!-- end ngRepeat: m in instagram_media -->
+                                    <div ng-repeat="m in instagram_media" class="ng-scope">
+                                        <img ng-src="https://scontent.cdninstagram.com/t51.2885-15/s320x320/e35/19425110_708384532682386_8636038441697542144_n.jpg"
+                                             src="https://scontent.cdninstagram.com/t51.2885-15/s320x320/e35/19425110_708384532682386_8636038441697542144_n.jpg">
+                                        <p>
+                                            <span class="value ng-binding">0</span>
+                                            <span class="unit">likes</span>
+                                            <span class="description ng-binding">["beerstagram","beers","london","beerme","bar","craftbeer","beerporn","beerallthetime","beerboard","brewtography","beertography","craftnotcrap","toøl","beergeek","brewdog","beergasm","instabeer","beervoyage","beer","taptakeover"]</span>
+                                        </p>
+                                    </div><!-- end ngRepeat: m in instagram_media -->
+                                    <div ng-repeat="m in instagram_media" class="ng-scope">
+                                        <img ng-src="https://scontent.cdninstagram.com/t51.2885-15/s320x320/e35/19379767_472003129803172_7069638927971254272_n.jpg"
+                                             src="https://scontent.cdninstagram.com/t51.2885-15/s320x320/e35/19379767_472003129803172_7069638927971254272_n.jpg">
+                                        <p>
+                                            <span class="value ng-binding">0</span>
+                                            <span class="unit">likes</span>
+                                            <span class="description ng-binding">["drive","vehicles","race","london","sportscars","carspot","driver","wheels","porsche","ride","horsepower","911turbos","turbos","cars","exoticcar","sportscar","muffler","spoiler","911","street"]</span>
+                                        </p>
+                                    </div><!-- end ngRepeat: m in instagram_media -->
+                                    <div ng-repeat="m in instagram_media" class="ng-scope">
+                                        <img ng-src="https://scontent.cdninstagram.com/t51.2885-15/s320x320/e35/c181.0.718.718/19367820_1867140996945093_4094752039672741888_n.jpg"
+                                             src="https://scontent.cdninstagram.com/t51.2885-15/s320x320/e35/c181.0.718.718/19367820_1867140996945093_4094752039672741888_n.jpg">
+                                        <p>
+                                            <span class="value ng-binding">2</span>
+                                            <span class="unit">likes</span>
+                                            <span class="description ng-binding">["londoner","igerslondon","streetphotography","londonlife","thisislondon","travel","london"]</span>
+                                        </p>
+                                    </div><!-- end ngRepeat: m in instagram_media -->
+                                    <div ng-repeat="m in instagram_media" class="ng-scope">
+                                        <img ng-src="https://scontent.cdninstagram.com/t51.2885-15/s320x320/e35/19379262_1389553774464695_637818908497149952_n.jpg"
+                                             src="https://scontent.cdninstagram.com/t51.2885-15/s320x320/e35/19379262_1389553774464695_637818908497149952_n.jpg">
+                                        <p>
+                                            <span class="value ng-binding">0</span>
+                                            <span class="unit">likes</span>
+                                            <span class="description ng-binding">["dreamgirls","london","savoy"]</span>
+                                        </p>
+                                    </div><!-- end ngRepeat: m in instagram_media -->
+                                    <div ng-repeat="m in instagram_media" class="ng-scope">
+                                        <img ng-src="https://scontent.cdninstagram.com/t51.2885-15/s320x320/e35/19367537_527735360684206_8708466511024488448_n.jpg"
+                                             src="https://scontent.cdninstagram.com/t51.2885-15/s320x320/e35/19367537_527735360684206_8708466511024488448_n.jpg">
+                                        <p>
+                                            <span class="value ng-binding">2</span>
+                                            <span class="unit">likes</span>
+                                            <span class="description ng-binding">["golborneroad","trellicktower","architecture","fridayyeah","weekend","relocation","airbnbhost","london","airbnb","sunshine"]</span>
+                                        </p>
+                                    </div><!-- end ngRepeat: m in instagram_media -->
+                                    <div ng-repeat="m in instagram_media" class="ng-scope">
+                                        <img ng-src="https://scontent.cdninstagram.com/t51.2885-15/s320x320/e35/19379350_834821090002732_2390650054756007936_n.jpg"
+                                             src="https://scontent.cdninstagram.com/t51.2885-15/s320x320/e35/19379350_834821090002732_2390650054756007936_n.jpg">
+                                        <p>
+                                            <span class="value ng-binding">2</span>
+                                            <span class="unit">likes</span>
+                                            <span class="description ng-binding">["latin","hiphop","wax","djset","dj","vinyl","records","soul","disco","london","funk","afro"]</span>
+                                        </p>
+                                    </div><!-- end ngRepeat: m in instagram_media -->
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <h3>Instagram</h3>
+
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div id="footer" class="row">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Technical details</div>
+                    <div class="panel-body">
+                        <div class="col-xs-12 col-sm-6 col-lg-4">
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent
+                                libero. Sed
+                                cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet.</p>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-lg-4">
+                            <p>Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris
+                                massa.
+                                Vestibulum lacinia arcu eget nulla. Class aptent taciti sociosqu ad litora torquent per
+                                conubia
+                                nostra, per inceptos himenaeos. </p>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-lg-4">
+                            <p>Mateusz Korzeniowski @ 2017</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bower JS imports -->
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

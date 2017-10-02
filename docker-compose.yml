@@ -1,0 +1,59 @@
+rabbit1:
+  image: "rabbitmq:3.6-alpine"
+  hostname: "rabbit1"
+  environment:
+    RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
+    RABBITMQ_DEFAULT_USER: "rabbitmq"
+    RABBITMQ_DEFAULT_PASS: "rabbitmq"
+    RABBITMQ_DEFAULT_VHOST: "/"
+redis1:
+  image: redis:3.0
+  hostname: "redis1"
+  command: redis-server --appendonly yes
+  volumes:
+    - ./executor/.redis:/data
+mysql1:
+  image: mysql:5.7
+  hostname: "mysql1"
+  environment:
+    - MYSQL_ROOT_PASSWORD=secret
+    - MYSQL_USER=celery
+    - MYSQL_PASSWORD=celery
+    - MYSQL_DATABASE=results
+  ports:
+    - "3306:3306"
+executor1:
+  image: "srvrlss-executor"
+  hostname: "executor1"
+  links:
+    - rabbit1
+    - redis1
+    - mysql1
+  environment:
+    - AIR_BNB_CLIENT_ID=
+    - INSTAGRAM_CLIENT_ID=
+    - INSTAGRAM_ACCESS_TOKEN=
+    - OPEN_WEATHER_API_KEY=
+    - SKY_SCANNER_API_KEY=
+    - UBER_SERVER_TOKEN=
+srvrlss-api1:
+  image: "srvrlss-api"
+  hostname: "srvrlss-api1"
+  links:
+    - rabbit1
+    - redis1
+    - mysql1
+  ports:
+    - "8080:8080"
+  environment:
+    - USE_AWS_LAMBDA=1
+    - AWS_LAMBDA_SERVICE_URL=
+srvrlss-gui:
+  image: "srvrlss-gui"
+  hostname: "srvrlss-gui1"
+  volumes:
+    - ./gui/app:/srvrlss/gui/app
+  links:
+    - srvrlss-api1
+  ports:
+    - "8000:8000"

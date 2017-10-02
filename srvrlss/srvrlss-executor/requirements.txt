@@ -1,0 +1,6 @@
+unidecode
+python-dateutil
+requests
+uber-rides
+../../commons
+../../clients

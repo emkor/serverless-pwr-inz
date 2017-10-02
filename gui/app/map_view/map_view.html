@@ -1,0 +1,196 @@
+<!--<div id="map_wrapper" class="row ng-scope">-->
+    <!--<div class="col-sm-12">-->
+        <!--<div class="panel panel-default">-->
+            <!--<div class="panel-heading">-->
+                <!--<span class="glyphicon glyphicon-globe"></span>-->
+                <!--<span>Map</span>-->
+            <!--</div>-->
+            <!--<div class="panel-body">-->
+                <!--<div map-dir id="map" class="map"></div>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</div>-->
+
+<div id="options" class="row">
+    <form>
+        <div class="col-xs-12 col-sm-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <span class="glyphicon glyphicon-export"></span>
+                    <span>Source</span>
+                </div>
+                <div class="panel-body">
+                    <div ng-repeat="p in places" class="input-group result">
+                        <span>
+                            <input type="radio" name="source_city" ng-href="#here" ng-click="setSourceCity(p)">
+                        </span>
+                        <span>{{p.city_name}}</span>
+                        <span class="minor">, {{p.country}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <span class="glyphicon glyphicon-import"></span>
+                    <span>Destination</span>
+                </div>
+                <div class="panel-body">
+                    <div ng-repeat="p in places" class="input-group result">
+                        <span>
+                            <input type="radio" name="destination_city" ng-href="#here"
+                                   ng-click="setDestinationCity(p)">
+                        </span>
+                        <span>{{p.city_name}}</span>
+                        <span class="minor">, {{p.country}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-xs-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">Retrieve data!</div>
+                <div class="panel-body text-center">
+                    <div class="btn-group btn-group-lg" role="group">
+                        <button type="button" class="btn btn-default" ng-href="#here" ng-click="loadBackendData()">
+                            Retrieve
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+
+<div id="results" class="row">
+    <div class="col-xs-12 col-sm-6 col-lg-4">
+        <div id="sky_scanner" class="results">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <span class="glyphicon glyphicon-plane"></span>
+                    <span>Flights</span>
+                </div>
+                <div class="panel-body">
+                    <div class="alert {{sky_scanner_flights_alert_class}}" role="alert">
+                        {{sky_scanner_flights_alert_message}}
+                    </div>
+                    <div class="result" ng-repeat="f in sky_scanner_flights">
+                        <p>
+                            <span>{{f.departure_time | date:'yyyy-MM-dd'}}</span>
+                            <span class="minor">from</span>
+                            <span>{{f.origin_place.name}}</span>
+                            <span class="minor">to</span>
+                            <span>{{f.destination_place.name}}</span>
+                        </p>
+                        <p class="minor">
+                            <span class="minor">for</span>
+                            <span>{{f.price.value}}</span>
+                            <span class="minor">{{f.price.currency}}</span>
+                            <span class="minor">with</span>
+                            <span>{{f.carrier_name}}</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12  col-sm-6 col-lg-4">
+        <div id="weather" class="results">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <span class="glyphicon glyphicon-cloud"></span>
+                    <span>Weather</span>
+                </div>
+                <div class="panel-body">
+                    <div class="alert {{weather_forecast_alert_class}}" role="alert">
+                        {{weather_forecast_alert_message}}
+                    </div>
+                    <div class="result" ng-repeat="f in weather_forecast">
+                        <p>
+                            <span>{{f.timestamp * 1000 | date:'MM/dd'}}</span>
+                            <span class="minor">at</span>
+                            <span>{{f.timestamp * 1000 | date:'h:mma'}}</span>
+                            <span class="minor">there will be</span>
+                            <span>{{f.weather_name}}</span>
+                            <span class="minor">with</span>
+                            <span>{{f.temperature| number : 0}}&deg;</span>
+                            <span class="minor">Celsius</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-xs-12 col-sm-6 col-lg-4">
+        <div id="uber" class="results">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <span class="glyphicon glyphicon-road"></span>
+                    <span>Local transport</span>
+                </div>
+                <div class="panel-body">
+                    <div class="alert {{uber_pricing_alert_class}}" role="alert">
+                        {{uber_pricing_alert_message}}
+                    </div>
+                    <div class="result" ng-repeat="p in uber_pricing">
+                        <p>
+                            <span>{{p.low_estimate.value}} - {{p.high_estimate.value}}</span>
+                            <span class="minor">{{p.low_estimate.currency}}</span>
+                            <span class="minor">for</span>
+                            <span>{{p.product_name}}</span>
+                            <span class="minor">with distance of</span>
+                            <span>{{p.distance}}</span>
+                            <span class="minor">km</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12  col-sm-6 col-lg-4">
+        <div id="instagram" class="results">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <span class="glyphicon glyphicon-picture"></span>
+                    <span>Latest photos</span>
+                </div>
+                <div class="panel-body">
+                    <div class="alert {{instagram_media_alert_class}}" role="alert">
+                        {{instagram_media_alert_message}}
+                    </div>
+                    <div class="row">
+                        <div class="result col-xs-12 col-sm-6" ng-repeat="m in instagram_media">
+                            <div class="thumbnail">
+                                <img ng-src="{{m.img_url_320}}"/>
+                                <div class="caption">
+                                    <p>
+                                        <span class="minor">added on</span>
+                                        <span>{{m.created_timestamp * 1000 | date:'MM/dd h:mma'}}</span>
+                                    </p>
+                                    <p>
+                                        <span class="minor">at</span>
+                                        <span>{{m.location.location_name}}</span>
+                                    </p>
+                                    <p>
+                                        <span class="minor">got</span>
+                                        <span>{{m.likes_count}}</span>
+                                        <span class="minor glyphicon glyphicon-heart"></span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

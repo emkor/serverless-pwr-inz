@@ -1,0 +1,34 @@
+<div class="row">
+    <div class="panel panel-default">
+        <div class="panel-heading">Technical notes</div>
+        <div class="panel-body">
+            <div class="col-xs-12 col-sm-6 col-lg-4">
+                <h3>Domain and purpose</h3>
+                <p>The app retrieves information helpful for potential travellers from public APIs of 3rd parties like
+                    Weather API, Uber API, Instagram API and SkyScanner API.</p>
+                <p>App is focused on western-European countries, but adding more cities would not be a problem.</p>
+                <p>Application was built to research possibilities of Serverless architecture approach and confront it
+                    with classic distributed approach.</p>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-lg-4">
+                <h3>Frameworks and technologies used</h3>
+                <p>Front-end application is written using angularjs framework with bootstrap applied and based on
+                    node.js platform while running on npm's built-in http-server.</p>
+                <p>Backend API is written in Python 2.7 with usage of Celery framework (with RabbitMQ as a message
+                    broker and MySQL as result storage) for local executor and is exposed by CherryPy web server. AWS
+                    Lambda executor uses Serverless Framework for deploying remote functions.</p>
+                <p>For deployment of each of the component (excluding AWS Lambda executor), Docker container is
+                    used. Managing deployment is possible thanks to Docker Compose technology.</p>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-lg-4">
+                <h3>Background</h3>
+                <p>Application was created as a part of Engineering Thesis at Wroclaw University of Technology (Faculty
+                    of Management and Computer Science) by Mateusz Korzeniowski.</p>
+                <p>Thesis subject is: Web based application supporting planning of tourist travel, built using
+                    Serverless architectural pattern</p>
+                <p>Author: Mateusz Korzeniowski</p>
+                <p>Supervisor: dr inż. Pawel Stelmach</p>
+            </div>
+        </div>
+    </div>
+</div>

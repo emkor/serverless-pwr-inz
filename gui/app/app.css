@@ -1,0 +1,24 @@
+.navbar-brand .glyphicon {
+    font-size: 18px;
+    position: relative;
+    top: 4px;
+}
+
+.panel-heading .glyphicon {
+    font-size: 14px;
+    position: relative;
+    top: 2px;
+}
+
+.result p.minor {
+    margin-left: 30px;
+}
+
+.result span.minor {
+    font-size: 0.8em;
+}
+
+.instagram_tags {
+    font-size: 0.7em;
+    color: #666;
+}

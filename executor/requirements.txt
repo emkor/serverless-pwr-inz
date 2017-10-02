@@ -1,0 +1,3 @@
+mysql-python
+celery[sqlalchemy]
+python-dateutil

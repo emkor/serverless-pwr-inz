@@ -1,0 +1,51 @@
+service: srvrlss-executor
+
+plugins:
+  - serverless-python-requirements
+
+provider:
+  name: aws
+  runtime: python2.7
+  region: eu-central-1
+  memorySize: 128
+  timeout: 10
+  environment:
+    AIR_BNB_CLIENT_ID: # paste here AIR_BNB_CLIENT_ID
+    INSTAGRAM_CLIENT_ID: # paste here INSTAGRAM_CLIENT_ID
+    INSTAGRAM_ACCESS_TOKEN: # paste here INSTAGRAM_ACCESS_TOKEN
+    OPEN_WEATHER_API_KEY: # paste here OPEN_WEATHER_API_KEY
+    SKY_SCANNER_API_KEY: # paste here SKY_SCANNER_API_KEY
+    UBER_SERVER_TOKEN: # paste here UBER_SERVER_TOKEN
+
+
+functions:
+  hello:
+    handler: handler.hello
+    events:
+      - http:
+          path: hello
+          method: get
+  retrieve_weather:
+    handler: handler.retrieve_weather
+    events:
+      - http:
+          path: weather
+          method: post
+  retrieve_instagram_media:
+    handler: handler.retrieve_instagram_media
+    events:
+      - http:
+          path: instagram
+          method: post
+  retrieve_uber_3km_pricing:
+    handler: handler.retrieve_uber_3km_pricing
+    events:
+      - http:
+          path: uber
+          method: post
+  retrieve_sky_scanner_flights:
+    handler: handler.retrieve_sky_scanner_flights
+    events:
+      - http:
+          path: skyscanner
+          method: post

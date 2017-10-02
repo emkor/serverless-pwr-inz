@@ -1,0 +1,13 @@
+sudo: required
+language: python
+
+services:
+  - docker
+
+before_script:
+  - sudo pip install tox
+
+script:
+  - cd ./commons && tox && cd ..
+  - cd ./clients && tox && cd ..
+  - bash ./docker-build-images.sh
